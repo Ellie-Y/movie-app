@@ -9,7 +9,7 @@ $bg: #282c34;
 h1 {
   color: $second;
   margin-bottom: 50px;
-  text-align: center ;
+  text-align: center;
 }
 
 .font-color {
@@ -20,7 +20,7 @@ body,
 #root {
   height: 100%;
   background-color: $bg;
-  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 
   header {
     padding: 10px;
@@ -44,5 +44,15 @@ body,
         font-size: 1.2rem;
       }
     }
+  }
+
+  .MuiCardMedia-root {
+    height: 200px;
+  }
+
+  .plot {
+    overflow: hidden;
+    height: 150px;
+    overflow-y: scroll;
   }
 }
