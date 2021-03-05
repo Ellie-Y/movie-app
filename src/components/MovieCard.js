@@ -24,19 +24,19 @@ function MovieCard(props) {
         axios.get(MOVIE_API_URL(i)).then((json) => {
           resList.push(json.data);
           dispatch({
-            type: "SEARCH_MOVIES_SUCCESS",
+            type: "LOAD_MOVIES_SUCCESS",
             payload: resList,
           });
         });
       });
-  }, [props]);
+  }, [props.movies]);
 
   const { movies } = state;
   return (
     <Grid container spacing={3}>
-      {movies.map((i) => (
-        <Grid item xs={3}>
-          <SingleMovie movie={i} />
+      {movies.map((val, i) => (
+        <Grid item xs={3} key={i}>
+          <SingleMovie movie={val} />
         </Grid>
       ))}
     </Grid>
@@ -52,8 +52,12 @@ function SingleMovie(props) {
           <Typography gutterBottom variant='h5' component='h2'>
             {props.movie.Title}
           </Typography>
-          <Typography variant='body2' color='textSecondary' component='p'>
-            <div className='plot'>{props.movie.Plot}</div>
+          <Typography
+            variant='body2'
+            color='textSecondary'
+            component='p'
+            className='plot'>
+            {props.movie.Plot}
           </Typography>
         </CardContent>
       </CardActionArea>

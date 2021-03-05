@@ -26,7 +26,7 @@ body,
     padding: 10px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
 
     .user {
       display: flex;
@@ -43,6 +43,14 @@ body,
         color: $second;
         font-size: 1.2rem;
       }
+    }
+
+    // Override material UI
+    .MuiInput-underline:before {
+      border-bottom: 1px solid $main;
+    }
+    label, input {
+      color: darken($color: $second, $amount: 20%);
     }
   }
 

@@ -5,10 +5,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 function Account(props) {
   const { users, curUser, onChange } = props;
-  const item = users.map((i) => {
+  const item = users.map((val, i) => {
     return (
-      <MenuItem key={i} value={i.id}>
-        {i.firstName}
+      <MenuItem key={i} value={val.id}>
+        {val.firstName}
       </MenuItem>
     );
   });
@@ -18,21 +18,19 @@ function Account(props) {
   };
 
   return (
-    <header>
-      <div className='user'>
-        <Avatar aria-label='recipe' className='avatar'>
-          U
-        </Avatar>
-        <Select
-          labelId='demo-simple-select-label'
-          id='demo-simple-select'
-          className='font-color'
-          value={curUser}
-          onChange={handleChange}>
-          {item}
-        </Select>
-      </div>
-    </header>
+    <div className='user'>
+      <Avatar aria-label='recipe' className='avatar'>
+        U
+      </Avatar>
+      <Select
+        labelId='demo-simple-select-label'
+        id='demo-simple-select'
+        className='font-color'
+        value={curUser}
+        onChange={handleChange}>
+        {item}
+      </Select>
+    </div>
   );
 }
 

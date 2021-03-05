@@ -12,7 +12,7 @@ export const reducer = (state, action) => {
         ...state,
         users: action.payload,
       };
-    case "SEARCH_MOVIES_SUCCESS":
+    case "LOAD_MOVIES_SUCCESS":
       return {
         ...state,
         loading: false,

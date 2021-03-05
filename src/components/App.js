@@ -3,8 +3,8 @@ import { initialState, reducer } from "../store/reducer";
 import axios from "axios";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
-
 import Account from "./Account";
 import MovieCard from "./MovieCard";
 import UserService from "../services/hooks";
@@ -46,11 +46,23 @@ function App() {
     setCurUserId(value);
   };
 
+  const handleChange = () => {};
+
   return (
     <div className='App'>
       <ThemeProvider theme={theme}>
         <Container>
-          <Account onChange={userChange} users={users} curUser={curUserId} />
+          <header>
+            <form>
+              <TextField
+                id='standard-basic'
+                label='Add movie by ID'
+                value={""}
+                onChange={handleChange}
+              />
+            </form>
+            <Account onChange={userChange} users={users} curUser={curUserId} />
+          </header>
 
           <h1>Favourite Movies</h1>
           <MovieCard movies={movieList} userId={curUserId} />
