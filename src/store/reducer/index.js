@@ -1,37 +1,46 @@
 import axios from "axios";
 
 export const initialState = {
-  loading: true,
-  users: [],
+  users: {},
   movies: [],
-  errorMessage: null,
+};
+const USER_API_URL = "http://localhost:5050/api/user/";
+
+const updateDatabase = (updatedObj) => {
+  axios
+    .put(`http://localhost:5050/api/user/${updatedObj.id}`, updatedObj)
+    .then((res) => {
+      console.log(res);
+    });
 };
 
-const USER_API_URL = "http://localhost:5050/api/";
-
-
-export const reducer = (state, action) => {
+export const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "USER_REQUEST":
-      return {
-        ...state,
-        users: action.payload,
-      };
     case "LOAD_MOVIES_SUCCESS":
       return {
         ...state,
-        loading: false,
         movies: action.payload,
       };
     case "UPDATE_MOVIE":
       const updatedObj = action.payload;
-      axios
-        .put(`http://localhost:5050/api/user/${updatedObj.id}`, updatedObj)
-        .then((res) => {
-          console.log(res);
-        });
+      updateDatabase(updatedObj);
       return {
         ...state,
+      };
+    case "DELETE_MOVIE":
+      // TODO real time delete
+      const { userId, movieId, allUsers, movieList } = action.payload;
+      // Get current user data
+      const curUser = allUsers.find(i => i.id === userId ? i : false);
+      const newList = movieList.filter((i) => i !== movieId);
+      const newMovieData = {
+        favourite_movies: newList.toString(),
+      };
+      const updatedData = Object.assign(curUser, newMovieData);
+      updateDatabase(updatedData);
+      return {
+        ...state,
+        newList,
       };
     default:
       return state;

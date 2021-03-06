@@ -30,6 +30,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const allUsers = UserService("user");
+
   useEffect(() => {
     setUsers(allUsers.data);
     allUsers.data.forEach((i) => {
@@ -88,7 +89,11 @@ function App() {
           </header>
 
           <h1>Favourite Movies</h1>
-          <MovieCard movies={movieList} userId={curUserId} />
+          <MovieCard
+            movies={movieList}
+            allUsers={allUsers.data}
+            userId={curUserId}
+          />
         </Container>
       </ThemeProvider>
     </div>

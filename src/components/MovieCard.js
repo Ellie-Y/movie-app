@@ -14,9 +14,9 @@ import axios from "axios";
 function MovieCard(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // Render all the movies
   const MOVIE_API_URL = (val) =>
     `http://www.omdbapi.com/?i=${val}&apikey=1b45329b`;
-
   useEffect(() => {
     let resList = [];
     props.movies &&
@@ -32,11 +32,24 @@ function MovieCard(props) {
   }, [props.movies]);
 
   const { movies } = state;
+
+  const onCardClick = (i) => {
+    dispatch({
+      type: "DELETE_MOVIE",
+      payload: {
+        movieId: i,
+        allUsers: props.allUsers,
+        userId: props.userId,
+        movieList: props.movies,
+      },
+    });
+  };
+
   return (
     <Grid container spacing={3}>
       {movies.map((val, i) => (
         <Grid item xs={3} key={i}>
-          <SingleMovie movie={val} />
+          <SingleMovie movie={val} clicked={onCardClick} />
         </Grid>
       ))}
     </Grid>
@@ -44,6 +57,11 @@ function MovieCard(props) {
 }
 
 function SingleMovie(props) {
+  // Pass the imdbID to parent component for remove
+  const handleClick = () => {
+    props.clicked(props.movie.imdbID);
+  };
+
   return (
     <Card className='movie-card'>
       <CardActionArea>
@@ -65,7 +83,7 @@ function SingleMovie(props) {
         <Button size='small' color='primary'>
           VIEW
         </Button>
-        <Button size='small' color='primary'>
+        <Button size='small' color='primary' onClick={handleClick}>
           Remove
         </Button>
       </CardActions>
