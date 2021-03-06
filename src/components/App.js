@@ -22,7 +22,6 @@ const theme = createMuiTheme({
   },
 });
 
-const USER_API_URL = "http://localhost:5050/api/";
 function App() {
   const [users, setUsers] = useState([]); // get all the users from database
   const [curUserId, setCurUserId] = useState(1); // current user id
@@ -46,7 +45,32 @@ function App() {
     setCurUserId(value);
   };
 
-  const handleChange = () => {};
+  const handleChange = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const newMovie = e.target.value;
+      const isExist = movieList.includes(newMovie);
+      if (!isExist) {
+        setMovieList([newMovie, ...movieList]);
+        updateDatabase(newMovie);
+      } else {
+        //TODO pop up shows exist already
+      }
+    }
+  };
+
+  function updateDatabase(newMovie) {
+    const curUser = users[curUserId - 1];
+    const newMovieList = {
+      favourite_movies: [newMovie, ...movieList].toString(),
+    };
+    const updatedData = Object.assign(curUser, newMovieList);
+    //TODO 新 ID插入数据库
+    dispatch({
+      type: "UPDATE_MOVIE",
+      payload: updatedData,
+    });
+  }
 
   return (
     <div className='App'>
@@ -57,8 +81,7 @@ function App() {
               <TextField
                 id='standard-basic'
                 label='Add movie by ID'
-                value={""}
-                onChange={handleChange}
+                onKeyPress={handleChange}
               />
             </form>
             <Account onChange={userChange} users={users} curUser={curUserId} />

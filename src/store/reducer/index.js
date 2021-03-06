@@ -1,9 +1,14 @@
+import axios from "axios";
+
 export const initialState = {
   loading: true,
   users: [],
   movies: [],
   errorMessage: null,
 };
+
+const USER_API_URL = "http://localhost:5050/api/";
+
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -18,11 +23,15 @@ export const reducer = (state, action) => {
         loading: false,
         movies: action.payload,
       };
-    case "SEARCH_MOVIES_FAILURE":
+    case "UPDATE_MOVIE":
+      const updatedObj = action.payload;
+      axios
+        .put(`http://localhost:5050/api/user/${updatedObj.id}`, updatedObj)
+        .then((res) => {
+          console.log(res);
+        });
       return {
         ...state,
-        loading: false,
-        errorMessage: action.error,
       };
     default:
       return state;
