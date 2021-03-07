@@ -28,7 +28,6 @@ export const reducer = (state = initialState, action) => {
         ...state,
       };
     case "DELETE_MOVIE":
-      // TODO real time delete
       const { userId, movieId, allUsers, movieList } = action.payload;
       // Get current user data
       const curUser = allUsers.find(i => i.id === userId ? i : false);

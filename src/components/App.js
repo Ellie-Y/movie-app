@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { initialState, reducer } from "../store/reducer";
-import axios from "axios";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
 import Account from "./Account";
@@ -26,26 +24,43 @@ function App() {
   const [users, setUsers] = useState([]); // get all the users from database
   const [curUserId, setCurUserId] = useState(1); // current user id
   const [isAuth, setIsAuth] = useState();
+  const [allMoviesList, setAllMoviesList] = useState();
   const [movieList, setMovieList] = useState();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const allUsers = UserService("user");
-
   useEffect(() => {
+    let allMovies = [];
     setUsers(allUsers.data);
-    allUsers.data.forEach((i) => {
-      if (i.id === curUserId) {
-        setIsAuth(i.authenticated);
-        setMovieList(i.favourite_movies.split(","));
+    allUsers.data.forEach((user) => {
+      if (user.id === curUserId) {
+        setIsAuth(user.authenticated);
+      }
+      if (!isAuth && user.id === curUserId) {
+        // If user is not authenticated then only render their movies only
+        setMovieList(user.favourite_movies.split(","));
+      } else if (isAuth) {
+        // Authenticated user can see all others' favourite movies but can't edit others
+        if (user.id !== curUserId) {
+          allMovies.push({
+            name: user.firstName,
+            movies: user.favourite_movies.split(","),
+          });
+        }
+        setAllMoviesList(allMovies);
       }
     });
-  }, [allUsers, curUserId]);
+  }, [allUsers, curUserId, isAuth]);
 
+  /**
+   * Switch user
+   * @param {string} value current user id
+   */
   const userChange = (value) => {
     setCurUserId(value);
   };
 
-  // Add a new movie by ID
+  // Add a new movie by movie ID
   const handleChange = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -92,7 +107,24 @@ function App() {
             movies={movieList}
             allUsers={allUsers.data}
             userId={curUserId}
+            auth={true}
           />
+          {/* Authenticated user can see other users' movies but can't edit */}
+          {isAuth && isAuth
+            ? allMoviesList &&
+              allMoviesList.map((i, index) => (
+                <>
+                  <h2>{`${i.name}'s movies`}</h2>
+                  <MovieCard
+                    movies={i.movies}
+                    allUsers={allUsers.data}
+                    userId={curUserId}
+                    key={index}
+                    auth={false}
+                  />
+                </>
+              ))
+            : false}
         </Container>
       </ThemeProvider>
     </div>

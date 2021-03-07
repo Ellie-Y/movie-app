@@ -12,6 +12,10 @@ h1 {
   text-align: center;
 }
 
+h2 {
+  color: $second;
+}
+
 .font-color {
   color: $second !important;
 }
@@ -67,7 +71,7 @@ body,
 
   .plot {
     overflow: hidden;
-    height: 150px;
+    height: 100px;
     overflow-y: scroll;
   }
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { getUsers } from "./index";
 
-// 使用 hook 的函数名必须大写
 function UserService(param) {
   const [data, setData] = useState({ data: [] });
 
@@ -20,7 +19,7 @@ function UserService(param) {
     fetchData();
 
     return () => (isUnmounted = !isUnmounted);
-  }, []); //* 不能使用 type 作为参数，因为每次调用时的参数都不一样，useEffect 依赖它来判断是否重新渲染，所以会导致无限循环
+  }, []);
 
   return data;
 }

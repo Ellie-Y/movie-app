@@ -13,12 +13,14 @@ import axios from "axios";
 
 function MovieCard(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [deletable, setDeletable] = useState();
   const [movieIds, setMovieIds] = useState();
   const [movieList, setMovieList] = useState();
 
   useEffect(() => {
     setMovieIds(props.movies);
-  }, [props.movies]);
+    setDeletable(props.auth);
+  }, [props.movies, props.auth]);
 
   // Render all favourite movies
   const MOVIE_API_URL = (val) =>
@@ -57,7 +59,11 @@ function MovieCard(props) {
       {movieList &&
         movieList.map((val, i) => (
           <Grid item xs={3} key={i}>
-            <SingleMovie movie={val} clicked={removeCard} />
+            <SingleMovie
+              movie={val}
+              clicked={removeCard}
+              deletable={deletable}
+            />
           </Grid>
         ))}
     </Grid>
@@ -88,12 +94,13 @@ function SingleMovie(props) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size='small' color='primary'>
-          VIEW
-        </Button>
-        <Button size='small' color='primary' onClick={removeMovie}>
-          Remove
-        </Button>
+        {props.deletable && props.deletable ? (
+          <Button size='small' color='primary' onClick={removeMovie}>
+            Remove
+          </Button>
+        ) : (
+          false
+        )}
       </CardActions>
     </Card>
   );
