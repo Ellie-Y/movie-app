@@ -32,7 +32,7 @@ function MovieCard(props) {
         axios.get(MOVIE_API_URL(i)).then((json) => {
           resList.push(json.data);
           dispatch({
-            type: "LOAD_MOVIES_SUCCESS",
+            type: "LOAD_MOVIES",
             payload: resList,
           });
         });

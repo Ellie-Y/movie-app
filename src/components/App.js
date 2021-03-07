@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
 import Account from "./Account";
 import MovieCard from "./MovieCard";
-import UserService from "../services/hooks";
+import { getUser } from "../services/index";
 
 import "../App.scss";
 
@@ -28,11 +28,13 @@ function App() {
   const [movieList, setMovieList] = useState(); // current user's favourite movie
   const [, dispatch] = useReducer(reducer, initialState);
 
-  const allUsers = UserService("user");
+  useEffect(() => {
+    getUser().then((res) => setUsers(res.data.data.data));
+  }, []);
+
   useEffect(() => {
     let otherUsersMovies = [];
-    setUsers(allUsers.data);
-    allUsers.data.forEach((user) => {
+    users.forEach((user) => {
       if (user.id === curUserId) {
         setIsAuth(user.authenticated);
       }
@@ -50,7 +52,7 @@ function App() {
         setAllOtherMovies(otherUsersMovies);
       }
     });
-  }, [allUsers, curUserId, isAuth]);
+  }, [users, curUserId, isAuth]);
 
   /**
    * Switch user
@@ -105,7 +107,7 @@ function App() {
           <h1>My Favourite Movies</h1>
           <MovieCard
             movies={movieList}
-            allUsers={allUsers.data}
+            allUsers={users}
             userId={curUserId}
             auth={true}
           />
@@ -114,10 +116,10 @@ function App() {
             ? allOtherMovies &&
               allOtherMovies.map((i, index) => (
                 <>
-                  <h2>{`${i.name}'s favourite movies`}</h2>
+                  <h2 className='font-color'>{`${i.name}'s favourite movies`}</h2>
                   <MovieCard
                     movies={i.movies}
-                    allUsers={allUsers.data}
+                    allUsers={users}
                     userId={curUserId}
                     key={index}
                     auth={false}

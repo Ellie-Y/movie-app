@@ -1,7 +1,4 @@
-import axios from "axios";
-
-const USER_API_URL = "http://localhost:5050/api/user/";
-
+import { updateUser } from "../../services";
 export const initialState = {
   users: {},
   movies: [],
@@ -9,27 +6,32 @@ export const initialState = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "LOAD_MOVIES_SUCCESS":
+    case "LOAD_USERS":
+      return {
+        ...state,
+        movies: action.payload,
+      };
+    case "LOAD_MOVIES":
       return {
         ...state,
         movies: action.payload,
       };
     case "UPDATE_MOVIE":
       const updatedObj = action.payload;
-      updateDatabase(updatedObj);
+      updateUser(updatedObj);
       return {
         ...state,
       };
     case "DELETE_MOVIE":
       const { userId, movieId, allUsers, movieList } = action.payload;
       // Get current user data
-      const curUser = allUsers.find(i => i.id === userId ? i : false);
+      const curUser = allUsers.find((i) => (i.id === userId ? i : false));
       const newList = movieList.filter((i) => i !== movieId);
       const newMovieData = {
         favourite_movies: newList.toString(),
       };
       const updatedData = Object.assign(curUser, newMovieData);
-      updateDatabase(updatedData);
+      updateUser(updatedData);
       return {
         ...state,
         newList,
@@ -37,10 +39,4 @@ export const reducer = (state = initialState, action) => {
     default:
       return state;
   }
-};
-
-const updateDatabase = (updatedObj) => {
-  axios.put(USER_API_URL + updatedObj.id, updatedObj).then((res) => {
-    console.log(res);
-  });
 };
