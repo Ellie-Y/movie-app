@@ -49,13 +49,20 @@ body,
     .MuiInput-underline:before {
       border-bottom: 1px solid $main;
     }
-    label, input {
+    label,
+    input {
       color: darken($color: $second, $amount: 20%);
     }
   }
 
   .MuiCardMedia-root {
     height: 200px;
+  }
+
+  h2.MuiTypography-root {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .plot {

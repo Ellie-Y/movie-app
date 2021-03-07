@@ -13,14 +13,20 @@ import axios from "axios";
 
 function MovieCard(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [movieIds, setMovieIds] = useState();
+  const [movieList, setMovieList] = useState();
 
-  // Render all the movies
+  useEffect(() => {
+    setMovieIds(props.movies);
+  }, [props.movies]);
+
+  // Render all favourite movies
   const MOVIE_API_URL = (val) =>
     `http://www.omdbapi.com/?i=${val}&apikey=1b45329b`;
   useEffect(() => {
     let resList = [];
-    props.movies &&
-      props.movies.forEach((i) => {
+    movieIds &&
+      movieIds.forEach((i) => {
         axios.get(MOVIE_API_URL(i)).then((json) => {
           resList.push(json.data);
           dispatch({
@@ -29,15 +35,16 @@ function MovieCard(props) {
           });
         });
       });
-  }, [props.movies]);
+    setMovieList(resList);
+  }, [movieIds]);
 
-  const { movies } = state;
-
-  const onCardClick = (i) => {
+  const removeCard = (id) => {
+    const newIdList = movieIds.filter((i) => i !== id);
+    setMovieIds(newIdList);
     dispatch({
       type: "DELETE_MOVIE",
       payload: {
-        movieId: i,
+        movieId: id,
         allUsers: props.allUsers,
         userId: props.userId,
         movieList: props.movies,
@@ -47,18 +54,19 @@ function MovieCard(props) {
 
   return (
     <Grid container spacing={3}>
-      {movies.map((val, i) => (
-        <Grid item xs={3} key={i}>
-          <SingleMovie movie={val} clicked={onCardClick} />
-        </Grid>
-      ))}
+      {movieList &&
+        movieList.map((val, i) => (
+          <Grid item xs={3} key={i}>
+            <SingleMovie movie={val} clicked={removeCard} />
+          </Grid>
+        ))}
     </Grid>
   );
 }
 
 function SingleMovie(props) {
   // Pass the imdbID to parent component for remove
-  const handleClick = () => {
+  const removeMovie = () => {
     props.clicked(props.movie.imdbID);
   };
 
@@ -83,7 +91,7 @@ function SingleMovie(props) {
         <Button size='small' color='primary'>
           VIEW
         </Button>
-        <Button size='small' color='primary' onClick={handleClick}>
+        <Button size='small' color='primary' onClick={removeMovie}>
           Remove
         </Button>
       </CardActions>

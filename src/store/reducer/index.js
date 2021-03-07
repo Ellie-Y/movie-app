@@ -8,7 +8,7 @@ const USER_API_URL = "http://localhost:5050/api/user/";
 
 const updateDatabase = (updatedObj) => {
   axios
-    .put(`http://localhost:5050/api/user/${updatedObj.id}`, updatedObj)
+    .put(USER_API_URL + updatedObj.id, updatedObj)
     .then((res) => {
       console.log(res);
     });

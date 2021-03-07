@@ -42,10 +42,10 @@ function App() {
   }, [allUsers, curUserId]);
 
   const userChange = (value) => {
-    // data index = value - 1
     setCurUserId(value);
   };
 
+  // Add a new movie by ID
   const handleChange = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -55,7 +55,7 @@ function App() {
         setMovieList([newMovie, ...movieList]);
         updateDatabase(newMovie);
       } else {
-        //TODO pop up shows exist already
+        //TODO pop up alert movie existing already
       }
     }
   };
@@ -66,7 +66,6 @@ function App() {
       favourite_movies: [newMovie, ...movieList].toString(),
     };
     const updatedData = Object.assign(curUser, newMovieList);
-    //TODO 新 ID插入数据库
     dispatch({
       type: "UPDATE_MOVIE",
       payload: updatedData,
