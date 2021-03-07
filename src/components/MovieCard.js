@@ -12,7 +12,7 @@ import { initialState, reducer } from "../store/reducer";
 import axios from "axios";
 
 function MovieCard(props) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [, dispatch] = useReducer(reducer, initialState);
   const [deletable, setDeletable] = useState();
   const [movieIds, setMovieIds] = useState();
   const [movieList, setMovieList] = useState();
@@ -94,7 +94,7 @@ function SingleMovie(props) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        {props.deletable && props.deletable ? (
+        {props.deletable ? (
           <Button size='small' color='primary' onClick={removeMovie}>
             Remove
           </Button>

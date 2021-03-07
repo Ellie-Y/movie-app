@@ -23,14 +23,14 @@ const theme = createMuiTheme({
 function App() {
   const [users, setUsers] = useState([]); // get all the users from database
   const [curUserId, setCurUserId] = useState(1); // current user id
-  const [isAuth, setIsAuth] = useState();
-  const [allMoviesList, setAllMoviesList] = useState();
-  const [movieList, setMovieList] = useState();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [isAuth, setIsAuth] = useState(); // Authenticated user or not -> boolean
+  const [allOtherMovies, setAllOtherMovies] = useState(); // other users' favourite movie
+  const [movieList, setMovieList] = useState(); // current user's favourite movie
+  const [, dispatch] = useReducer(reducer, initialState);
 
   const allUsers = UserService("user");
   useEffect(() => {
-    let allMovies = [];
+    let otherUsersMovies = [];
     setUsers(allUsers.data);
     allUsers.data.forEach((user) => {
       if (user.id === curUserId) {
@@ -42,12 +42,12 @@ function App() {
       } else if (isAuth) {
         // Authenticated user can see all others' favourite movies but can't edit others
         if (user.id !== curUserId) {
-          allMovies.push({
+          otherUsersMovies.push({
             name: user.firstName,
             movies: user.favourite_movies.split(","),
           });
         }
-        setAllMoviesList(allMovies);
+        setAllOtherMovies(otherUsersMovies);
       }
     });
   }, [allUsers, curUserId, isAuth]);
@@ -60,7 +60,7 @@ function App() {
     setCurUserId(value);
   };
 
-  // Add a new movie by movie ID
+  // Enter to add a new movie by movie ID
   const handleChange = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -70,7 +70,7 @@ function App() {
         setMovieList([newMovie, ...movieList]);
         updateDatabase(newMovie);
       } else {
-        //TODO pop up alert movie existing already
+        //TODO pop up alert to show movie existing already
       }
     }
   };
@@ -102,7 +102,7 @@ function App() {
             <Account onChange={userChange} users={users} curUser={curUserId} />
           </header>
 
-          <h1>Favourite Movies</h1>
+          <h1>My Favourite Movies</h1>
           <MovieCard
             movies={movieList}
             allUsers={allUsers.data}
@@ -111,10 +111,10 @@ function App() {
           />
           {/* Authenticated user can see other users' movies but can't edit */}
           {isAuth && isAuth
-            ? allMoviesList &&
-              allMoviesList.map((i, index) => (
+            ? allOtherMovies &&
+              allOtherMovies.map((i, index) => (
                 <>
-                  <h2>{`${i.name}'s movies`}</h2>
+                  <h2>{`${i.name}'s favourite movies`}</h2>
                   <MovieCard
                     movies={i.movies}
                     allUsers={allUsers.data}

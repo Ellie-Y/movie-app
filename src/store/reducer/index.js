@@ -1,17 +1,10 @@
 import axios from "axios";
 
+const USER_API_URL = "http://localhost:5050/api/user/";
+
 export const initialState = {
   users: {},
   movies: [],
-};
-const USER_API_URL = "http://localhost:5050/api/user/";
-
-const updateDatabase = (updatedObj) => {
-  axios
-    .put(USER_API_URL + updatedObj.id, updatedObj)
-    .then((res) => {
-      console.log(res);
-    });
 };
 
 export const reducer = (state = initialState, action) => {
@@ -44,4 +37,10 @@ export const reducer = (state = initialState, action) => {
     default:
       return state;
   }
+};
+
+const updateDatabase = (updatedObj) => {
+  axios.put(USER_API_URL + updatedObj.id, updatedObj).then((res) => {
+    console.log(res);
+  });
 };
